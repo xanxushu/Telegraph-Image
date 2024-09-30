@@ -8,26 +8,6 @@ export async function onRequest(context) {  // Contents of context object
         data, // arbitrary space for passing data between middlewares 
     } = context;
 
-    const allowedDomains = env.DOMAIN_LIST.split(",");  //域名从cloudflare的环境变量中获取
-    const firstDomain = allowedDomains[0];  // 获取列表中的第一个域名
-
-    // Extract the Referer header or use a placeholder if not present
-    const Referer = request.headers.get('Referer') || "Referer";
-
-    // Create a URL object from the Referer to extract the hostname
-    let refererUrl;
-    try {
-        refererUrl = new URL(Referer);
-    } catch (error) {
-        return Response.redirect(`https://${firstDomain}`, 302);
-    }
-
-    // Check if the hostname of the Referer is in the list of allowed domains
-    if (!allowedDomains.includes(refererUrl.hostname)) {
-        return Response.redirect(`https://${firstDomain}`, 302);
-    }
-
-    // Existing code for handling requests continues here...
     const url = new URL(request.url);
     let fileUrl = 'https://telegra.ph/' + url.pathname + url.search
     if (url.pathname.length > 39) {
